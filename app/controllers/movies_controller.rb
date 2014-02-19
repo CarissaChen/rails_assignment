@@ -23,10 +23,11 @@ class MoviesController < ApplicationController
     	@relist = 1
     end
     
+    
     if(@relist == 1)
     	redirect_to movies_path(:sort=>params[:sort])
     end
-    	
+    
   end
 
   def new
