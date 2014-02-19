@@ -13,9 +13,11 @@ class MoviesController < ApplicationController
     if(params[:sort].to_s == 'title')
     	session[:sort] = params[:sort]
     	@movies = @movies.sort_by {|m| m.title}
+    	@sort = 'title'
     elsif(params[:sort].to_s == 'release')
     	session[:sort] = params[:sort]
     	@movies = @movies.sort_by {|m| m.release_date.to_s}
+    	@sort = 'release'
     elsif(session.has_key?(:sort))
     	params[:sort] = session[:sort]
     	@relist = 1
