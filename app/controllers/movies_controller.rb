@@ -6,50 +6,47 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
-  def index
-  
-    #@movies = Movie.all
-    @all_ratings = Movie.all_ratings
-    @sorted = session[:sorted]
-    @ratings = session[:ratings]
-    @relist = 0
+ def index
+     @movies = Movie.all
+     @all_ratings = Movie.all_ratings
     
-    if(params[:ratings] != nil)
-    	@checked_ratings = params[:ratings]
-    	@movies = Movie.find(:all, :conditions => {:rating => @checked_ratings.keys})
-    	@relist = 1
-    	
-    else
-    	@checked_ratings = @all_ratings
-    	@movies = Movie.all
-    end
-    
-    if(params[:sort] == 'title')
-    	session[:sort] = params[:sort]
-    	@movies = @movies.sort_by {|m| m.title}
-    	#@relist = 1
-    	
-    	
-    	
-    elsif(params[:sort] == 'release')
-    	session[:sort] = params[:sort]
-    	@movies = @movies.sort_by {|m| m.release_date}
-    	#@relist = 1
-    	
-    	
-    
-    #elsif(session.has_key?(:sort))
-    #elsif(params[:sort] == nil)
-    	#params[:sort] = session[:sort]
-    	#@relist = 1
-    end
-    
-    #if(@relist == 1)
-    #	redirect_to :sort=>params[:sort], :ratings=>params[:ratings]
-    #end
-    
-  end
-
+     if params[:ratings] != nil #if a rating was clicked
+     	@ratings_selected = params[:ratings].keys #set checked boxes(keys) to variable
+     	#use Active Record to retrieve object
+     	@movies = Movie.where(:rating =>@ratings_selected) # filter based on rating selections    
+     	session[:rating_selections] = @ratings_selected #store the checked ratings in a session
+     	
+     end
+     
+     @checked_ratings = session[:rating_selections] #set this session as a variable 
+     
+     if session[:rating_selections] != nil #if there is something in the session, show those movies
+     	@movies = Movie.where(:rating=>@checked_ratings)
+     end
+     
+     
+     if params[:title_sort] == 'title' #if the title header was clicked
+     	session[:title_sort] = params[:title_sort] #store that in a session
+     	session[:release_date_sort].clear #release date cannot also be clicked, clear session
+     	#retrieve movies with the checked rating and sort by title
+     	@movies = Movie.where(:rating=>@checked_ratings).order(session[:title_sort]) 
+     	
+     elsif params[:release_date_sort] == 'release_date' #if the release date header is clicked
+     	session[:release_date_sort] = params[:release_date_sort] #store that in a session
+     	session[:title_sort].clear #title cannot also be clicked, clear session
+     	#retrieve movies with the checked rating and order by release date
+     	@movies = Movie.where(:rating=>@checked_ratings).order(session[:release_date_sort])
+     end  
+     
+     #if (session[:title_sort] != nil) && (params[:release_date_sort] == nil)  
+     #	@movies = Movie.where(:rating=>@checked_ratings).order(session[:title_sort]	
+     
+     #elsif (session[:release_date_sort] != nil) && (params[:title_sort] == nil)
+     #	@movies = Movie.where(:rating=>@checked_ratings).order(session[:release_date_sort])
+     	
+     #end
+ end
+  	
   def new
     # default: render 'new' template
   end
