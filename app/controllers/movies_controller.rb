@@ -7,26 +7,46 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+  
+    #@movies = Movie.all
+    @all_ratings = Movie.all_ratings
+    @sorted = session[:sorted]
+    @ratings = session[:ratings]
     @relist = 0
     
-    if(params[:sort].to_s == 'title')
+    if(params[:ratings] != nil)
+    	@checked_ratings = params[:ratings]
+    	@movies = Movie.find(:all, :conditions => {:rating => @checked_ratings.keys})
+    	@relist = 1
+    	
+    else
+    	@checked_ratings = @all_ratings
+    	@movies = Movie.all
+    end
+    
+    if(params[:sort] == 'title')
     	session[:sort] = params[:sort]
     	@movies = @movies.sort_by {|m| m.title}
-    	@sort = 'title'
-    elsif(params[:sort].to_s == 'release')
+    	#@relist = 1
+    	
+    	
+    	
+    elsif(params[:sort] == 'release')
     	session[:sort] = params[:sort]
-    	@movies = @movies.sort_by {|m| m.release_date.to_s}
-    	@sort = 'release'
-    elsif(session.has_key?(:sort))
-    	params[:sort] = session[:sort]
-    	@relist = 1
+    	@movies = @movies.sort_by {|m| m.release_date}
+    	#@relist = 1
+    	
+    	
+    
+    #elsif(session.has_key?(:sort))
+    #elsif(params[:sort] == nil)
+    	#params[:sort] = session[:sort]
+    	#@relist = 1
     end
     
-    
-    if(@relist == 1)
-    	redirect_to movies_path(:sort=>params[:sort])
-    end
+    #if(@relist == 1)
+    #	redirect_to :sort=>params[:sort], :ratings=>params[:ratings]
+    #end
     
   end
 
