@@ -13,38 +13,39 @@ class MoviesController < ApplicationController
      if params[:ratings] != nil #if a rating was clicked
      	@ratings_selected = params[:ratings].keys #set checked boxes(keys) to variable
      	#use Active Record to retrieve object
-     	@movies = Movie.where(:rating =>@ratings_selected) # filter based on rating selections    
+     	#@movies = Movie.where(:rating =>@ratings_selected) # filter based on rating selections    
      	session[:rating_selections] = @ratings_selected #store the checked ratings in a session
      	
      end
      
      @checked_ratings = session[:rating_selections] #set this session as a variable 
      
-     if session[:rating_selections] != nil #if there is something in the session, show those movies
-     	@movies = Movie.where(:rating=>@checked_ratings)
-     end
+     #if session[:rating_selections] != nil #if there is something in the session, show those movies
+     #	@movies = Movie.where(:rating=>@checked_ratings)
+     #end
      
      
      if params[:title_sort] == 'title' #if the title header was clicked
      	session[:title_sort] = params[:title_sort] #store that in a session
      	session[:release_date_sort].clear #release date cannot also be clicked, clear session
      	#retrieve movies with the checked rating and sort by title
-     	@movies = Movie.where(:rating=>@checked_ratings).order(session[:title_sort]) 
+     	@movies = Movie.where(:rating=>@checked_ratings).order(params[:title_sort]) 
      	
      elsif params[:release_date_sort] == 'release_date' #if the release date header is clicked
      	session[:release_date_sort] = params[:release_date_sort] #store that in a session
      	session[:title_sort].clear #title cannot also be clicked, clear session
      	#retrieve movies with the checked rating and order by release date
-     	@movies = Movie.where(:rating=>@checked_ratings).order(session[:release_date_sort])
+     	@movies = Movie.where(:rating=>@checked_ratings).order(params[:release_date_sort])
      end  
      
-     #if (session[:title_sort] != nil) && (params[:release_date_sort] == nil)  
-     #	@movies = Movie.where(:rating=>@checked_ratings).order(session[:title_sort]	
+     if (session[:title_sort] != nil) && (params[:release_date_sort] == nil)  
+     	@movies = Movie.where(:rating=>@checked_ratings).order(session[:title_sort])	
      
-     #elsif (session[:release_date_sort] != nil) && (params[:title_sort] == nil)
-     #	@movies = Movie.where(:rating=>@checked_ratings).order(session[:release_date_sort])
+     
+     elsif (session[:release_date_sort] != nil) && (params[:title_sort] == nil)
+     	@movies = Movie.where(:rating=>@checked_ratings).order(session[:release_date_sort])
      	
-     #end
+     end
  end
   	
   def new
@@ -74,5 +75,6 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
+
 
 end
