@@ -9,14 +9,16 @@ class MoviesController < ApplicationController
  def index
      @movies = Movie.all
      @all_ratings = Movie.all_ratings
+     @checked_ratings = Movie.all_ratings
     
      if params[:ratings] != nil #if a rating was clicked
      	@ratings_selected = params[:ratings].keys #set checked boxes(keys) to variable    
      	session[:rating_selections] = @ratings_selected #store the checked ratings in a session
+     	@checked_ratings = session[:rating_selections] #set this session as a variable
      	
      end
      
-     @checked_ratings = session[:rating_selections] #set this session as a variable 
+     #@checked_ratings = session[:rating_selections] #set this session as a variable 
      
      if params[:title_sort] == 'title' #if the title header was clicked
      	session[:title_sort] = params[:title_sort] #store that in a session
@@ -29,11 +31,13 @@ class MoviesController < ApplicationController
      
      end  
      
-     if (session[:title_sort] != nil)  
+     if (session[:title_sort] != nil) #title was clicked and stored in session, show these movies in order with the specific ratings
+     	@checked_ratings = session[:rating_selections] #set this session as a variable 
      	@movies = Movie.where(:rating=>@checked_ratings).order(session[:title_sort])	
      
      end
      if (session[:release_date_sort] != nil)
+     	@checked_ratings = session[:rating_selections] #set this session as a variable
      	@movies = Movie.where(:rating=>@checked_ratings).order(session[:release_date_sort])
      	
      end
