@@ -21,15 +21,12 @@ class MoviesController < ApplicationController
      if params[:title_sort] == 'title' #if the title header was clicked
      	session[:title_sort] = params[:title_sort] #store that in a session
      	session[:release_date_sort] = nil #release date cannot also be clicked, set session to nil
-     	#added this for when user clicks to sort the Movie Title first
-     	@movies = Movie.where(:rating=>@checked_ratings).order(session[:title_sort]) 
- 
+     	
      	
      elsif params[:release_date_sort] == 'release_date' #if the release date header is clicked
      	session[:release_date_sort] = params[:release_date_sort] #store that in a session
      	session[:title_sort] = nil #title cannot also be clicked, set session to nil
-     	@movies = Movie.where(:rating=>@checked_ratings).order(session[:title_sort])
-
+     
      end  
      
      if (session[:title_sort] != nil)  

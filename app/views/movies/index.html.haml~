@@ -5,10 +5,10 @@
   Include: 
   - @all_ratings.each do |rating|
     = rating
-    - if @checked_ratings == nil
-      = check_box_tag "ratings[#{rating}]", "ratings_#{rating}"
-    - else   
-      = check_box_tag "ratings[#{rating}]", "ratings_#{rating}", @checked_ratings.include?(rating)
+    -#- if @checked_ratings == nil
+    -#  = check_box_tag "ratings[#{rating}]", "ratings_#{rating}"
+    -#- else   
+    = check_box_tag "ratings[#{rating}]", "ratings_#{rating}", @checked_ratings.include?(rating)
   = submit_tag 'Refresh', :id=>"ratings_submit"
 
 
