@@ -27,7 +27,7 @@ h1 {
 h1.title {
   margin: 0 0 1em;
   padding: 10px;
-  background-color: orange;
+  background-color: green;
   color: white;
   border-bottom: 4px solid gold;
   font-size: 2em;
@@ -43,6 +43,9 @@ table#movies th {
   border: 2px solid white;
   font-weight: bold;
   background-color: wheat;
+}
+table#movies th.hilite {
+  background-color: blue;
 }
 table#movies th, table#movies td {
   padding: 4px;
